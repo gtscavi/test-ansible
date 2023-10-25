@@ -1,7 +1,7 @@
 ---
 - name: Update Docker Compose service images and restart
   hosts: staging
-  become: true  # You may need to become root or use sudo to run Docker commands
+  become: yes  # You may need to become root or use sudo to run Docker commands
   become_user: root  # Specify the user to become (root in this case)
 
   vars:
@@ -10,11 +10,11 @@
 
   tasks:
       - name: Pull the updated Docker images
-        become: true
+        become: yes
         command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
 
       - name: Update the Docker Compose file for the Investigator service
-        become: true
+        become: yes
         blockinfile:
             path: /opt/dev1.infrastructure/docker-compose.yml
             marker: "# {mark} ANSIBLE MANAGED BLOCK - DO NOT EDIT"
@@ -23,7 +23,7 @@
                   image: aixpand/investigator:{{ investigator_image_tag }}
 
       - name: Update the Docker Compose file for the Backend service
-        become: true
+        become: yes
         blockinfile:
             path: /opt/dev1.infrastructure/docker-compose.yml
             marker: "# {mark} ANSIBLE MANAGED BLOCK - DO NOT EDIT"
