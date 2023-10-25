@@ -11,10 +11,10 @@
   tasks:
       - name: Pull the updated Docker images
         become: true
-        become_user: root
         command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
 
       - name: Update the Docker Compose file for the Investigator service
+        become: true
         blockinfile:
             path: /opt/dev1.infrastructure/docker-compose.yml
             marker: "# {mark} ANSIBLE MANAGED BLOCK - DO NOT EDIT"
@@ -23,6 +23,7 @@
                   image: aixpand/investigator:{{ investigator_image_tag }}
 
       - name: Update the Docker Compose file for the Backend service
+        become: true
         blockinfile:
             path: /opt/dev1.infrastructure/docker-compose.yml
             marker: "# {mark} ANSIBLE MANAGED BLOCK - DO NOT EDIT"
@@ -31,6 +32,7 @@
                   image: aixpand/backend:{{ backend_image_tag }}
 
       - name: Bring up Docker Compose services
+        become: true
         command: docker-compose up -d
         args:
             chdir: /opt/dev1.infrastructure
