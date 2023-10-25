@@ -10,6 +10,8 @@
 
   tasks:
       - name: Pull the updated Docker images
+        become: true
+        become_user: root
         command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
 
       - name: Update the Docker Compose file for the Investigator service
