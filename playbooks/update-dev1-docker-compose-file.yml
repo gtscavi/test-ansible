@@ -16,7 +16,7 @@
         ansible.builtin.replace:
             path: /opt/dev1.infrastructure/docker-compose.yml
             regexp: '^\s+image:\s+aixpand/backend:.*$'  # Use a regex pattern to match the line
-            replace: "    image: aixpand/backend:{{ backend_image_tag }}"
+            replace: "        image: aixpand/backend:{{ backend_image_tag }}"
         become: yes
 
       - name: Bring up Docker Compose services
