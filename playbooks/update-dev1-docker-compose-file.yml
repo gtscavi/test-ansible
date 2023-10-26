@@ -13,13 +13,12 @@
         command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
 
       - name: Update the Docker Compose file for the Backend service
-        become: yes
         blockinfile:
             path: /opt/dev1.infrastructure/docker-compose.yml
-            marker: "# {mark} ANSIBLE MANAGED BLOCK - DO NOT EDIT"
+            marker: "# ANSIBLE MANAGED BLOCK - DO NOT EDIT"
             block: |
-                backend:
-                  image: aixpand/backend:{{ backend_image_tag }}
+                  backend:
+                    image: aixpand/backend:{{ backend_image_tag }}
 
       - name: Bring up Docker Compose services
         become: true
