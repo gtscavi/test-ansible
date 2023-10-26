@@ -5,22 +5,12 @@
   become_user: root  # Specify the user to become (root in this case)
 
   vars:
-      investigator_image_tag: "{{ investigator_image_tag }}"
       backend_image_tag: "{{ backend_image_tag }}"
 
   tasks:
       - name: Pull the updated Docker images
         become: yes
         command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
-
-      - name: Update the Docker Compose file for the Investigator service
-        become: yes
-        blockinfile:
-            path: /opt/dev1.infrastructure/docker-compose.yml
-            marker: "# {mark} ANSIBLE MANAGED BLOCK - DO NOT EDIT"
-            block: |
-                investigator:
-                  image: aixpand/investigator:{{ investigator_image_tag }}
 
       - name: Update the Docker Compose file for the Backend service
         become: yes
