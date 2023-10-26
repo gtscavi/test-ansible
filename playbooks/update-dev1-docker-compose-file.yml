@@ -6,17 +6,29 @@
 
   vars:
       backend_image_tag: "{{ backend_image_tag }}"
+      investigator_image_tag: "{{ investigator_image_tag }}"
 
   tasks:
-      - name: Pull the updated Docker images
+      - name: Pull investigator image
         become: yes
         command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
+
+      - name: Pull backend image
+        become: yes
+        command: "docker pull aixpand/backend:{{ backend_image_tag }}"
 
       - name: Replace image value for the backend service
         ansible.builtin.replace:
             path: /opt/dev1.infrastructure/docker-compose.yml
             regexp: '^\s+image:\s+aixpand/backend:.*$'  # Use a regex pattern to match the line
             replace: "        image: aixpand/backend:{{ backend_image_tag }}"
+        become: yes
+
+      - name: Replace image value for the investigator service
+        ansible.builtin.replace:
+            path: /opt/dev1.infrastructure/docker-compose.yml
+            regexp: '^\s+image:\s+aixpand/investigator:.*$'  # Use a regex pattern to match the line
+            replace: "        image: aixpand/investigator:{{ investigator_image_tag }}"
         become: yes
 
       - name: Bring up Docker Compose services
