@@ -2,10 +2,15 @@
 - name: Update Ubuntu OS
   hosts: all
   become: true
-  become_user: root
-  become_method: sudo
 
   tasks:
       - name: Update package cache
         apt:
             update_cache: yes
+        become: true
+
+      - name: Upgrade all packages
+        apt:
+            autoremove: yes
+            autoclean: yes
+        become: true
