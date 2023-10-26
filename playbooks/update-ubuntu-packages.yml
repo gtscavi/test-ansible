@@ -1,16 +1,16 @@
 ---
 - name: Update Ubuntu OS
   hosts: all
-  become: yes
+  become: true
 
   tasks:
       - name: Update package cache
         apt:
             update_cache: yes
-        become: yes
+        become: true
 
       - name: Upgrade all packages
         apt:
             autoremove: yes
             autoclean: yes
-        become: yes
+        become: true
