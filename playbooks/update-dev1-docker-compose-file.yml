@@ -12,13 +12,12 @@
         become: yes
         command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
 
-      - name: Update the Docker Compose file for the Backend service
-        blockinfile:
+      - name: Replace image value for the backend service
+        ansible.builtin.replace:
             path: /opt/dev1.infrastructure/docker-compose.yml
-            marker: "# ANSIBLE MANAGED BLOCK - DO NOT EDIT"
-            block: |
-                  backend:
-                    image: aixpand/backend:{{ backend_image_tag }}
+            regexp: '^\s+image:\s+aixpand/backend:.*$'  # Use a regex pattern to match the line
+            replace: "    image: aixpand/backend:{{ backend_image_tag }}"
+        become: yes
 
       - name: Bring up Docker Compose services
         become: true
