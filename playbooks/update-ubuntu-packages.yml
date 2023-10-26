@@ -7,8 +7,10 @@
       - name: Update package cache
         apt:
             update_cache: yes
+        become: yes
 
       - name: Upgrade all packages
         apt:
             autoremove: yes
             autoclean: yes
+        become: yes
