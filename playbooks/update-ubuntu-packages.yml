@@ -1,0 +1,14 @@
+---
+- name: Update Ubuntu OS
+  hosts: all
+  become: yes
+
+  tasks:
+      - name: Update package cache
+        apt:
+            update_cache: yes
+
+      - name: Upgrade all packages
+        apt:
+            autoremove: yes
+            autoclean: yes
