@@ -7,7 +7,7 @@
   tasks:
       - name: Read Docker Compose file
         become: yes
-        command: docker compose -f /opt/cavi2-infrastructure/docker-compose.yml config --quiet
+        command: docker compose -f /opt/cavi2-infrastructure/docker-compose.yml config
         register: docker_compose_info
 
       - name: Extract image tags
