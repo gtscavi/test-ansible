@@ -15,6 +15,11 @@
             backend_image_tag: "{{ docker_compose_info.services.backend.image | regex_search(':(.*)$') }}"
             investigator_image_tag: "{{ docker_compose_info.services.investigator.image | regex_search(':(.*)$') }}"
 
+      - name: Debug docker_compose_info
+        debug:
+            var: docker_compose_info
+            verbosity: 2 # Increase verbosity to see the output
+
       - name: Create a variables file with image tags
         copy:
             content: |
