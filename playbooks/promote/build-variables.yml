@@ -1,8 +1,12 @@
 ---
 - name: Gather Docker Compose Information
   hosts: all
+  become: yes  # You may need to become root or use sudo to run Docker commands
+  become_user: root  # Specify the user to become (root in this case)
+
   tasks:
       - name: Read Docker Compose file
+        become: yes
         docker_compose:
             project_src: /opt/cavi2-infrastructure
         register: docker_compose_info
