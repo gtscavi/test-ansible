@@ -12,8 +12,8 @@
 
       - name: Extract image tags
         set_fact:
-            backend_image_tag: "{{ docker_compose_info.services.service1.image | regex_search(':(.*)$') }}"
-            investigator_image_tag: "{{ docker_compose_info.services.service2.image | regex_search(':(.*)$') }}"
+            backend_image_tag: "{{ docker_compose_info.services.backend.image | regex_search(':(.*)$') }}"
+            investigator_image_tag: "{{ docker_compose_info.services.investigator.image | regex_search(':(.*)$') }}"
 
       - name: Create a variables file with image tags
         copy:
