@@ -1,0 +1,38 @@
+---
+- name: Update Docker Compose service images and restart
+  hosts: staging
+  become: yes  # You may need to become root or use sudo to run Docker commands
+  become_user: root  # Specify the user to become (root in this case)
+
+  vars:
+      backend_image_tag: "{{ backend_image_tag }}"
+      investigator_image_tag: "{{ investigator_image_tag }}"
+
+  tasks:
+      - name: Pull investigator image
+        become: yes
+        command: "docker pull aixpand/investigator:{{ investigator_image_tag }}"
+
+      - name: Pull backend image
+        become: yes
+        command: "docker pull aixpand/backend:{{ backend_image_tag }}"
+
+      - name: Replace image value for the backend service
+        ansible.builtin.replace:
+            path: /opt/cavi2-infrastructure/docker-compose.yml
+            regexp: '^\s+image:\s+aixpand/backend:.*$'  # Use a regex pattern to match the line
+            replace: "        image: aixpand/backend:{{ backend_image_tag }}"
+        become: yes
+
+      - name: Replace image value for the investigator service
+        ansible.builtin.replace:
+            path: /opt/cavi2-infrastructure/docker-compose.yml
+            regexp: '^\s+image:\s+aixpand/investigator:.*$'  # Use a regex pattern to match the line
+            replace: "        image: aixpand/investigator:{{ investigator_image_tag }}"
+        become: yes
+
+      - name: Bring up Docker Compose services
+        become: true
+        command: docker compose -f docker-compose.yml up -d
+        args:
+            chdir: /opt/cavi2-infrastructure
