@@ -1,6 +1,6 @@
 ---
 - name: Update Docker Compose service images and restart
-  hosts: staging
+  hosts: all
   become: yes  # You may need to become root or use sudo to run Docker commands
   become_user: root  # Specify the user to become (root in this case)
 

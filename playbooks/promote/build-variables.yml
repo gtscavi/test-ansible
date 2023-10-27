@@ -1,6 +1,6 @@
 ---
 - name: Gather Docker Compose Information
-  hosts: first_server
+  hosts: all
   tasks:
       - name: Read Docker Compose file
         docker_compose:
