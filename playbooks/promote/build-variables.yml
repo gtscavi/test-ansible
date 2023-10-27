@@ -1,0 +1,20 @@
+---
+- name: Gather Docker Compose Information
+  hosts: first_server
+  tasks:
+      - name: Read Docker Compose file
+        docker_compose:
+            project_src: /opt/cavi2-infrastructure
+        register: docker_compose_info
+
+      - name: Extract image tags
+        set_fact:
+            backend_image_tag: "{{ docker_compose_info.services.service1.image | regex_search(':(.*)$') }}"
+            investigator_image_tag: "{{ docker_compose_info.services.service2.image | regex_search(':(.*)$') }}"
+
+      - name: Create a variables file with image tags
+        copy:
+            content: |
+                backend_image_tag: "{{ backend_image_tag }}"
+                investigator_image_tag: "{{ investigator_image_tag }}"
+            dest: ./variables.yml
