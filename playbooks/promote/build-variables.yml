@@ -5,24 +5,28 @@
   become_user: root  # Specify the user to become (root in this case)
 
   tasks:
-      - name: Read Docker Compose file
-        become: yes
-        command: docker compose -f /opt/cavi2-infrastructure/docker-compose.yml config
-        register: docker_compose_info
+      - name: Read docker compose yaml
+        ansible.builtin.shell: cat /opt/cavi2-infrastructure/docker-compose.yml
+        register: result
 
-      - name: Extract image tags
+      - name: Parse yaml into variable
         set_fact:
-            backend_image_tag: "{{ docker_compose_info.services.backend.image | regex_search(':(.*)$') }}"
-            investigator_image_tag: "{{ docker_compose_info.services.investigator.image | regex_search(':(.*)$') }}"
+          docker_compose_info: "{{ result.stdout | from_yaml_all | first }}"
 
-      - name: Debug docker_compose_info
-        debug:
-            var: docker_compose_info
-            verbosity: 2 # Increase verbosity to see the output
+      - name: Set facts about images
+        set_fact:
+            backend_image_tag: "{{ docker_compose_info.services.backend.image | regex_search(':(.*)$') | replace(':', '') }}"
+            investigator_image_tag: "{{ docker_compose_info.services.investigator.image | regex_search(':(.*)$') | replace(':', '') }}"
 
       - name: Create a variables file with image tags
-        copy:
-            content: |
-                backend_image_tag: "{{ backend_image_tag }}"
-                investigator_image_tag: "{{ investigator_image_tag }}"
-            dest: ./variables.yml
+        template:
+            src: ./templates/variables.yml.j2
+            dest: /opt/cavi2-infrastructure/variables.yml
+        vars:
+            backend_image_tag: "{{ backend_image_tag }}"
+            investigator_image_tag: "{{ investigator_image_tag }}"
+
+      - name: Check if variables file exists
+        ansible.builtin.stat:
+            path: /opt/cavi2-infrastructure/variables.yml
+        register: file_stat

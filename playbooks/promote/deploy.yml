@@ -7,7 +7,7 @@
   tasks:
       - name: Read variables from the file
         include_vars:
-            file: ./variables.yml
+            file: /opt/cavi2-infrastructure/variables.yml
 
       - name: Pull investigator image
         become: yes
