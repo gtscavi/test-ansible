@@ -15,16 +15,16 @@
 
       - name: Set facts about images
         set_fact:
-            backend_image_tag: "{{ docker_compose_info.services.backend.image | regex_search(':(.*)$') | replace(':', '') }}"
-            investigator_image_tag: "{{ docker_compose_info.services.investigator.image | regex_search(':(.*)$') | replace(':', '') }}"
+            backend_tag: "{{ docker_compose_info.services.backend.image | regex_search(':(.*)$') | replace(':', '') }}"
+            investigator_tag: "{{ docker_compose_info.services.investigator.image | regex_search(':(.*)$') | replace(':', '') }}"
 
       - name: Create a variables file with image tags
         template:
             src: ./templates/variables.yml.j2
             dest: /opt/cavi2-infrastructure/variables.yml
         vars:
-            backend_image_tag: "{{ backend_image_tag }}"
-            investigator_image_tag: "{{ investigator_image_tag }}"
+            backend_image_tag: "{{ backend_tag }}"
+            investigator_image_tag: "{{ investigator_tag }}"
 
       - name: Check if variables file exists
         ansible.builtin.stat:
