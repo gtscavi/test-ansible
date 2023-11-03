@@ -30,5 +30,5 @@
 
       - name: Check if variables file exists
         ansible.builtin.stat:
-            path: ./variables.yml
+            path: /tmp/variables.yml
         register: file_stat
