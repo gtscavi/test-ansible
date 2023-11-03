@@ -19,14 +19,16 @@
             investigator_tag: "{{ docker_compose_info.services.investigator.image | regex_search(':(.*)$') | replace(':', '') }}"
 
       - name: Create a variables file with image tags
+        become: no
+        delegate_to: localhost
         template:
             src: ./templates/variables.yml.j2
-            dest: /opt/cavi2-infrastructure/variables.yml
+            dest: /tmp/variables.yml
         vars:
             backend_image_tag: "{{ backend_tag }}"
             investigator_image_tag: "{{ investigator_tag }}"
 
       - name: Check if variables file exists
         ansible.builtin.stat:
-            path: /opt/cavi2-infrastructure/variables.yml
+            path: ./variables.yml
         register: file_stat

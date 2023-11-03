@@ -5,9 +5,15 @@
   become_user: root  # Specify the user to become (root in this case)
 
   tasks:
+      - name: Check if variables file exists
+        ansible.builtin.stat:
+            path: /tmp/variables.yml
+        register: file_stat
+
       - name: Read variables from the file
+        delegate_to: localhost
         include_vars:
-            file: /opt/cavi2-infrastructure/variables.yml
+            file: /temp/variables.yml
 
       - name: Pull investigator image
         become: yes
@@ -39,5 +45,5 @@
 
       - name: Remove the variables file
         file:
-            path: ./variables.yml
+            path: /tmp/variables.yml
             state: absent
